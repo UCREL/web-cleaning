@@ -11,7 +11,7 @@ import os
 import re
 
 __author__ = "Andrew Moore"
-__email__ = "a.moore@lancaster.ac.uk"
+__email__  = "a.moore@lancaster.ac.uk"
 
 if len(sys.argv) != 3:
     exception = """ The script takes 2 arguments:\n
