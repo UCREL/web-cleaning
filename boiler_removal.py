@@ -33,7 +33,7 @@ if not os.path.exists(output_directory):
 output_directory = os.path.abspath(output_directory)
 
 command = "python -m justext -s English -o"
-arguments = command.split()
+org_arguments = command.split()
 
 for html_file in os.listdir(results_folder):
     # Has to be a HTML file
@@ -43,9 +43,9 @@ for html_file in os.listdir(results_folder):
     output_file = output_directory + os.sep + file_name + ".txt"
     html_file = results_folder + os.sep + html_file
 
+    arguments = list(org_arguments)
+
     arguments.append(output_file)
     arguments.append(html_file)
 
     subprocess.run(arguments)
-
-    arguments = arguments[:len(arguments)-2]
