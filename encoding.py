@@ -109,7 +109,7 @@ for row in get_charset(database_path):
         html_data = f.read()
 
     if html_data == None:
-        logging.info("No HTML data was read from %s" html_file)
+        logging.info("No HTML data was read from %s" % html_file)
         continue
 
     # Write the converted data back to the the same file
