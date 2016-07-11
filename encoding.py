@@ -123,20 +123,26 @@ for row in get_charset(database_path):
         if charset not in difference_stats:
             difference_stats[charset] = {}
         if guessed_encoding not in difference_stats[charset]:
-            difference_stats[charset][guessed_encoding] = 1
+            difference_stats[charset][guessed_encoding] = [html_file]
         else:
-            difference_stats[charset][guessed_encoding] += 1
+            difference_stats[charset][guessed_encoding].append(html_file)
 
 # Logging the stats of number of differences between the guessed encoding
 # and the encoding specified within the page metadata.
+logging.info("\n")
 for metadata_charset, gussed_stats in difference_stats.items():
-    outer_log = """ The following number of times the encodings were gussed from the data
+    outer_log = """The following number of times the encodings were guessed from the data
     which according to the metadata collected from the HTML headers should be %s:
     \n
     """
     logging.info(outer_log % metadata_charset)
 
-    for guessed_charset, num_times in gussed_stats.items():
+    for guessed_charset, file_list in gussed_stats.items():
+        logging.info("\n")
+
         inner_log = """guessed charset: %s number of times gussed differently
         with regards to metadata charset: %d"""
-        logging.info(inner_log % (guessed_charset, num_times))
+        logging.info(inner_log % (guessed_charset, len(file_list)))
+        logging.info("The following files had those differences: \n")
+        for a_file in file_list:
+            logging.info("%s" % a_file)
