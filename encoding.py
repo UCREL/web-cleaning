@@ -100,10 +100,18 @@ for row in get_charset(database_path):
         with(open(html_file, mode='r', encoding=charset)) as f:
             html_data = f.read()
 
+    charset          = charset.lower()
+    guessed_encoding = guessed_encoding.lower()
+
     # Convert HTML to UTF-8
-    with(open(html_file, encoding='utf-8', mode='r')) as f:
-        logging.info("Read file as UTF-8 data for re-encoding to UTF-8.")
+    with(open(html_file, encoding=guessed_encoding, mode='r')) as f:
+        logging.info("Read file as %s data for re-encoding to UTF-8." % guessed_encoding)
         html_data = f.read()
+
+    if html_data == None:
+        logging.info("No HTML data was read from %s" html_file)
+        continue
+
     # Write the converted data back to the the same file
     with(open(html_file, encoding='utf-8', mode='w')) as f:
         logging.info("Wrote back to file with UTF-8 data.")
