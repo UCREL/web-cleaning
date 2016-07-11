@@ -20,13 +20,15 @@ justext.
 ### How to run
 Where output is the name of the folder you would like the boiler plate removed
 text files to be stored. NOTE that the folder does not have to exist.
+
 ..\python\python.exe encoding.py ..\web-corpus-construction\output output
 
 ## export_metadata.py
 ### What it does
-1. Exports the data from the given database file to a CSV file
+1. Exports the data from the given database file to a CSV file.
 
 ### How to run
 Where output.csv is optional and by default it is output.csv but can be any
 filename.
+
 ..\python\python.exe encoding.py ..\web-corpus-construction\output\metadata.db output.csv
