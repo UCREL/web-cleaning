@@ -28,4 +28,7 @@ database_name = sys.argv[1]
 csv_file = sys.argv[2] if len(sys.argv) > 2 else 'output.csv'
 con = sqlite3.connect(database_name)
 table = sql.read_sql('select * from output', con)
+# make sure it is a CSV file
+csv_file_name = csv_file.split(".")[0]
+csv_file = csv_file_name + ".csv"
 table.to_csv(csv_file)
