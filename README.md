@@ -21,7 +21,7 @@ justext.
 Where output is the name of the folder you would like the boiler plate removed
 text files to be stored. NOTE that the folder does not have to exist prior to running.
 
-    ..\..\python\python.exe encoding.py PATH_TO_THE_DB_DIR output
+    ..\..\python\python.exe boiler_removal.py PATH_TO_THE_DB_DIR output
 
 ## export_metadata.py
 ### What it does
@@ -31,4 +31,4 @@ text files to be stored. NOTE that the folder does not have to exist prior to ru
 Where output.csv is optional and by default it is output.csv but can be any
 filename.
 
-    ..\..\python\python.exe encoding.py PATH_TO_THE_DB_DIR\metadata.db output.csv
+    ..\..\python\python.exe export_metadata.py PATH_TO_THE_DB_DIR\metadata.db output.csv
