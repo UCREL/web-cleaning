@@ -100,9 +100,6 @@ for row in get_charset(database_path):
         with(open(html_file, mode='r', encoding=charset)) as f:
             html_data = f.read()
 
-    charset          = charset.lower()
-    guessed_encoding = guessed_encoding.lower()
-
     # Convert HTML to UTF-8
     with(open(html_file, encoding=guessed_encoding, mode='r')) as f:
         logging.info("Read file as %s data for re-encoding to UTF-8." % guessed_encoding)
@@ -119,13 +116,16 @@ for row in get_charset(database_path):
 
     # See if the metadata encoding statement is different to the guessed
     # encoding from the data.
-    if charset.lower() != guessed_encoding.lower():
-        if charset not in difference_stats:
-            difference_stats[charset] = {}
-        if guessed_encoding not in difference_stats[charset]:
-            difference_stats[charset][guessed_encoding] = [html_file]
-        else:
-            difference_stats[charset][guessed_encoding].append(html_file)
+    if charset != None:
+        charset          = charset.lower()
+        guessed_encoding = guessed_encoding.lower()
+        if charset.lower() != guessed_encoding.lower():
+            if charset not in difference_stats:
+                difference_stats[charset] = {}
+            if guessed_encoding not in difference_stats[charset]:
+                difference_stats[charset][guessed_encoding] = [html_file]
+            else:
+                difference_stats[charset][guessed_encoding].append(html_file)
 
 # Logging the stats of number of differences between the guessed encoding
 # and the encoding specified within the page metadata.
