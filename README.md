@@ -7,7 +7,7 @@ charset being the encoding found in the HTTP headers when gathering the web
 pages e.g. utf-8.
 
 ## Slides that support the code
-### [slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf](Main presentation slides)
+### [Main presentation slides](slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf)
 Within the slides one of the practical sessions requires
 [sqliteman](http://sourceforge.net/projects/sqliteman/files/).
 
