@@ -1,9 +1,9 @@
 #Dependencies
 
-* (https://www.python.org/)[Python] > 3.4
-* (https://pypi.python.org/pypi/jusText)[justext]
-* (http://pandas.pydata.org/)[pandas]
-* (https://pypi.python.org/pypi/chardet)[chardet]
+* [Python](https://www.python.org/) > 3.4
+* [justext](https://pypi.python.org/pypi/jusText)
+* [pandas](http://pandas.pydata.org/)
+* [chardet](https://pypi.python.org/pypi/chardet)
 
 ## Install Process
 1. pip install chardet
