@@ -8,7 +8,7 @@ pages e.g. utf-8.
 
 ## Slides that support the code
 ### [Main presentation slides](slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf)
-Within the slides one of the practical sessions requires
+Within the slides one of the practical tasks requires
 [sqliteman](http://sourceforge.net/projects/sqliteman/files/).
 
 ## encoding.py
