@@ -1,13 +1,15 @@
 # Web Cleaning
-This repository links to data that is collected with the following [https://github.com/UCREL/web-corpus-construction](spider)
+This repository links to data that is collected with the following [spider](https://github.com/UCREL/web-corpus-construction)
 however it will work with any spider that stores HTML files into a directory
-and contains a SQlite database. The database has to contain two columns
+and contains a SQlite database (called metadata.db below). The database has to contain two columns
 *url_id* and *charset* where url_id corresponds to the HTML file names and the
 charset being the encoding found in the HTTP headers when gathering the web
 pages e.g. utf-8.
 
 ## Slides that support the code
 ### [slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf](Main presentation slides)
+Within the slides one of the practical sessions requires
+[sqliteman](http://sourceforge.net/projects/sqliteman/files/).
 
 ## encoding.py
 ### What it does
@@ -43,4 +45,4 @@ filename.
 
     ..\..\python\python.exe export_metadata.py PATH_TO_THE_DB_DIR\metadata.db output.csv
 
-## [dependencies.md](Dependencies)
+## [Dependencies](dependencies.md)
