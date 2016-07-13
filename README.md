@@ -1,4 +1,14 @@
 # Web Cleaning
+This repository links to data that is collected with the following [https://github.com/UCREL/web-corpus-construction](spider)
+however it will work with any spider that stores HTML files into a directory
+and contains a SQlite database. The database has to contain two columns
+*url_id* and *charset* where url_id corresponds to the HTML file names and the
+charset being the encoding found in the HTTP headers when gathering the web
+pages e.g. utf-8.
+
+## Slides that support the code
+### [slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf](Main presentation slides)
+
 ## encoding.py
 ### What it does
 1. Compares the stated character set encoding in the HTTP header to the
@@ -32,3 +42,5 @@ Where output.csv is optional and by default it is output.csv but can be any
 filename.
 
     ..\..\python\python.exe export_metadata.py PATH_TO_THE_DB_DIR\metadata.db output.csv
+
+## [dependencies.md](Dependencies)
