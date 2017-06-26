@@ -32,3 +32,4 @@ table = sql.read_sql('select * from output', con)
 csv_file_name = csv_file.split(".")[0]
 csv_file = csv_file_name + ".csv"
 table.to_csv(csv_file)
+con.close()
