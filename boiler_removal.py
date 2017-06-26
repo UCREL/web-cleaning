@@ -10,6 +10,8 @@ import subprocess
 import os
 import re
 
+import justext
+
 __author__ = "Andrew Moore"
 __email__  = "a.moore@lancaster.ac.uk"
 
@@ -28,24 +30,22 @@ if not os.path.exists(results_folder):
     raise Exception("The result folder %s does not exist" %results_folder)
 results_folder = os.path.abspath(results_folder)
 
+output_directory = os.path.abspath(output_directory)
 if not os.path.exists(output_directory):
     os.mkdir(output_directory)
-output_directory = os.path.abspath(output_directory)
-
-command = "python -m justext -s English -o"
-org_arguments = command.split()
 
 for html_file in os.listdir(results_folder):
+
     # Has to be a HTML file
-    if re.match("\w*.html", html_file) == None:
+    if re.match("\w*.html", html_file) is None:
         continue
-    file_name = html_file.split(".")[0]
-    output_file = output_directory + os.sep + file_name + ".txt"
-    html_file = results_folder + os.sep + html_file
 
-    arguments = list(org_arguments)
+    html_file_path = os.path.join(results_folder, html_file)
+    with open(html_file_path, 'rb') as fp:
+        paragraphs = justext.justext(fp.read(), set())#, justext.get_stoplist("English"))
 
-    arguments.append(output_file)
-    arguments.append(html_file)
-
-    subprocess.run(arguments)
+    text_file_name = html_file.split('.')[0] + '.txt'
+    output_file_path = os.path.join(output_directory, text_file_name)
+    with open(output_file_path, 'w', encoding='utf-8') as fp:
+        for paragraph in paragraphs:
+            fp.write(paragraph.text)
