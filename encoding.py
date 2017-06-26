@@ -18,6 +18,9 @@ from chardet.universaldetector import UniversalDetector
 __author__ = "Andrew Moore"
 __email__  = "a.moore@lancaster.ac.uk"
 
+DETECTOR = UniversalDetector()
+
+
 def detected_encoding(page):
     '''Given a file object will return a dictionary of encodings and confidence values.
 
@@ -25,15 +28,15 @@ def detected_encoding(page):
     https://chardet.readthedocs.io/en/latest/usage.html
     '''
 
-    detector = UniversalDetector()
+    DETECTOR.reset()
 
     for line in page.readlines():
-        detector.feed(line)
-        if detector.done:
+        DETECTOR.feed(line)
+        if DETECTOR.done:
             break
 
-    detector.close()
-    return detector.result
+    DETECTOR.close()
+    return DETECTOR.result
 
 
 def get_charset(database):
@@ -41,11 +44,12 @@ def get_charset(database):
     a tuple of (url_id, charset).'''
 
     sql = "SELECT url_id, charset from output"
-    con    = lite.connect(database)
+    con = lite.connect(database)
     cursor = con.cursor()
-    result = cursor.execute(sql)
+    for result in cursor.execute(sql):
+        yield result
 
-    return result
+    con.close()
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename='encoding.log', level=logging.INFO)
@@ -53,7 +57,9 @@ logging.basicConfig(format='%(asctime)s %(message)s', filename='encoding.log', l
 if len(sys.argv) != 3:
     exception = """ The script takes 2 arguments:\n
     1) The path to the folder containing HTML files.\n
-    2) The filename of the database used to contain the metadata.
+    2) The filename of the database used to contain the metadata, of which this
+    has to be contained in the results folder directory stated in the first
+    argument.
     """
     logging.debug(exception)
     raise Exception(exception)
@@ -61,10 +67,11 @@ if len(sys.argv) != 3:
 results_folder = sys.argv[1]
 database_name  = sys.argv[2]
 
+results_folder = os.path.abspath(results_folder)
 if not os.path.exists(results_folder):
     logging.debug("The result folder %s does not exist" %results_folder)
     raise Exception("The result folder %s does not exist" %results_folder)
-results_folder = os.path.abspath(results_folder)
+
 
 database_path = os.path.join(results_folder, database_name)
 if not os.path.exists(database_path):
@@ -77,36 +84,37 @@ for row in get_charset(database_path):
     url_id, charset = row
     html_file = os.path.join(results_folder, str(url_id) + ".html")
 
-    logging.info("Processing %s file." % html_file)
+    logging.info("Processing url id %i.", url_id)
 
     guessed_encoding = None
     with open(html_file, 'rb') as f:
         guessed_encoding = detected_encoding(f)
-    if guessed_encoding == None:
-        print("Could not read the following file %s." %html_file)
+    if guessed_encoding is None:
+        logging.error("Could not guess encoding for url id: %i "\
+                      "processing next url.", url_id)
         continue
 
     guessed_confidence = guessed_encoding['confidence']
-    guessed_encoding   = guessed_encoding['encoding']
-    logging.info("Guessed the following encoding %s with %1.2f confidence." %  (guessed_encoding, guessed_confidence))
+    guessed_encoding = guessed_encoding['encoding']
+    logging.info("Guessed the following encoding %s with %1.2f confidence.",
+                 guessed_encoding, guessed_confidence)
 
     html_data = None
 
-    if charset == None:
-        logging.info("Charset defined by metadata does not exist.")
+    if charset is None:
+        logging.info("Charset defined by metadata does not exist url id %i", url_id)
     else:
-        logging.info("Charset defined by metadata %s." % charset)
+        logging.info("Charset defined by metadata %s.", charset)
 
-        with(open(html_file, mode='r', encoding=charset)) as f:
-            html_data = f.read()
 
     # Convert HTML to UTF-8
     with(open(html_file, encoding=guessed_encoding, mode='r')) as f:
-        logging.info("Read file as %s data for re-encoding to UTF-8." % guessed_encoding)
+        logging.info("Read file as %s data for re-encoding to UTF-8.",
+                     guessed_encoding)
         html_data = f.read()
 
-    if html_data == None:
-        logging.info("No HTML data was read from %s" % html_file)
+    if html_data is None:
+        logging.info("No HTML data was read from url id: %i", url_id)
         continue
 
     # Write the converted data back to the the same file
@@ -117,7 +125,7 @@ for row in get_charset(database_path):
     # See if the metadata encoding statement is different to the guessed
     # encoding from the data.
     if charset != None:
-        charset          = charset.lower()
+        charset = charset.lower()
         guessed_encoding = guessed_encoding.lower()
         if charset.lower() != guessed_encoding.lower():
             if charset not in difference_stats:
@@ -130,19 +138,20 @@ for row in get_charset(database_path):
 # Logging the stats of number of differences between the guessed encoding
 # and the encoding specified within the page metadata.
 logging.info("\n")
+logging.info("\n")
+logging.info("\n")
 for metadata_charset, gussed_stats in difference_stats.items():
     outer_log = """The following number of times the encodings were guessed from the data
     which according to the metadata collected from the HTML headers should be %s:
-    \n
     """
-    logging.info(outer_log % metadata_charset)
+    logging.info(outer_log, metadata_charset)
 
     for guessed_charset, file_list in gussed_stats.items():
         logging.info("\n")
 
         inner_log = """guessed charset: %s number of times gussed differently
-        with regards to metadata charset: %d"""
-        logging.info(inner_log % (guessed_charset, len(file_list)))
+        with regards to metadata charset: %i"""
+        logging.info(inner_log, guessed_charset, len(file_list))
         logging.info("The following files had those differences: \n")
         for a_file in file_list:
-            logging.info("%s" % a_file)
+            logging.info("%s", a_file)
