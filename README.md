@@ -10,6 +10,8 @@ pages e.g. utf-8.
 ### [Main presentation slides](slides/UCREL_NLP_S2_Web_creation_cleaning_Intro.pdf)
 Within the slides one of the practical tasks requires
 [sqliteman](http://sourceforge.net/projects/sqliteman/files/).
+To install on Linux instead of downloading it run the following command:
+sudo apt-get install -y sqliteman
 
 ## encoding.py
 ### What it does
